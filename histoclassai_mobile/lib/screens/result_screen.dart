@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/prediction.dart';
+import '../utils/constants.dart';
 import 'quiz_screen.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -28,6 +29,101 @@ class ResultScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Photo prise au microscope
+              if (result.imageUrl.isNotEmpty) ...[
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        insetPadding: const EdgeInsets.all(16),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            InteractiveViewer(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.network(
+                                  AppConstants.resolveImageUrl(result.imageUrl),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                              onPressed: () => Navigator.of(ctx).pop(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          AspectRatio(
+                            aspectRatio: 16 / 11,
+                            child: Image.network(
+                              AppConstants.resolveImageUrl(result.imageUrl),
+                              fit: BoxFit.cover,
+                              loadingBuilder: (ctx, child, progress) {
+                                if (progress == null) return child;
+                                return Container(
+                                  color: Colors.grey.shade100,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (ctx, err, stack) => Container(
+                                color: Colors.grey.shade200,
+                                child: const Center(
+                                  child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.zoom_in, color: Colors.white, size: 16),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Agrandir',
+                                  style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+
               // Main Result Card
               Container(
                 padding: const EdgeInsets.all(24.0),

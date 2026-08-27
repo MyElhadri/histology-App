@@ -77,4 +77,7 @@ public class EtudiantScanDto
     public string UrlImage { get; set; } = string.Empty;
     public float ScoreConfiance { get; set; }
     public DateTime DateScan { get; set; }
+    public int? NoteQcm { get; set; }
+    public int? TotalQuestionsQcm { get; set; }
+    public DateTime? DateQcm { get; set; }
 }

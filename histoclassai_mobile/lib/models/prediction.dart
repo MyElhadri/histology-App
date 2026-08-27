@@ -62,6 +62,9 @@ class ScanHistoryItem {
   final String urlImage;
   final double scoreConfiance;
   final DateTime dateScan;
+  final int? noteQcm;
+  final int? totalQuestionsQcm;
+  final DateTime? dateQcm;
 
   ScanHistoryItem({
     required this.id,
@@ -70,6 +73,9 @@ class ScanHistoryItem {
     required this.urlImage,
     required this.scoreConfiance,
     required this.dateScan,
+    this.noteQcm,
+    this.totalQuestionsQcm,
+    this.dateQcm,
   });
 
   factory ScanHistoryItem.fromJson(Map<String, dynamic> json) {
@@ -80,6 +86,9 @@ class ScanHistoryItem {
       urlImage: json['urlImage'] ?? '',
       scoreConfiance: (json['scoreConfiance'] ?? 0.0).toDouble(),
       dateScan: DateTime.tryParse(json['dateScan'] ?? '') ?? DateTime.now(),
+      noteQcm: json['noteQcm'],
+      totalQuestionsQcm: json['totalQuestionsQcm'],
+      dateQcm: json['dateQcm'] != null ? DateTime.tryParse(json['dateQcm']) : null,
     );
   }
 }

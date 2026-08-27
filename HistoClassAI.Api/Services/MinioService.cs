@@ -41,11 +41,9 @@ public class MinioService : IMinioService
                 .WithObjectSize(stream.Length)
                 .WithContentType(file.ContentType));
 
-            // Retourne l'URL de l'image (Endpoint récupéré de la config, ou localhost si on est en dev extérieur)
-            // L'URL publique accessible par le web (Vite/Flutter) devra taper sur le port exposé (9000).
-            var endpoint = _configuration["Minio:Endpoint"];
-            // Nettoyage de l'endpoint pour qu'il soit propre ("minio:9000" depuis l'intérieur de Docker, ou "localhost:9000" en dehors)
-            return $"http://localhost:9000/{_bucketName}/{fileName}";
+            // URL publique accessible par les clients (Web / Flutter)
+            var publicUrl = _configuration["Minio:PublicUrl"] ?? "http://localhost:9000";
+            return $"{publicUrl.TrimEnd('/')}/{_bucketName}/{fileName}";
         }
         catch (MinioException e)
         {

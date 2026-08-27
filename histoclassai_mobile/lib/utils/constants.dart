@@ -13,4 +13,19 @@ class AppConstants {
   static const Color textSecondary = Color(0xFF64748B);
   static const Color successColor = Color(0xFF10B981);
   static const Color errorColor = Color(0xFFEF4444);
+
+  /// Adapte automatiquement les URLs d'images (MinIO) au réseau local du téléphone
+  static String resolveImageUrl(String? url) {
+    if (url == null || url.trim().isEmpty) return '';
+    try {
+      final apiUri = Uri.parse(apiBaseUrl);
+      final host = apiUri.host;
+      return url
+          .replaceAll('localhost:9000', '$host:9000')
+          .replaceAll('127.0.0.1:9000', '$host:9000')
+          .replaceAll('minio:9000', '$host:9000');
+    } catch (_) {
+      return url;
+    }
+  }
 }

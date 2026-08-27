@@ -153,6 +153,7 @@ public class ScansController : ControllerBase
 
         var scans = await _context.Scans
             .Include(s => s.Tissu)
+            .Include(s => s.ResultatsQCM)
             .Where(s => s.UtilisateurId == utilisateurId)
             .OrderByDescending(s => s.DateScan)
             .Select(s => new EtudiantScanDto
@@ -162,7 +163,10 @@ public class ScansController : ControllerBase
                 TissuNom = s.Tissu.Nom,
                 UrlImage = s.UrlImage,
                 ScoreConfiance = s.ScoreConfiance,
-                DateScan = s.DateScan
+                DateScan = s.DateScan,
+                NoteQcm = s.ResultatsQCM.OrderByDescending(r => r.DateTest).Select(r => (int?)r.Note).FirstOrDefault(),
+                DateQcm = s.ResultatsQCM.OrderByDescending(r => r.DateTest).Select(r => (DateTime?)r.DateTest).FirstOrDefault(),
+                TotalQuestionsQcm = 3
             })
             .ToListAsync();
 
