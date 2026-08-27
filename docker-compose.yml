@@ -1,0 +1,100 @@
+services:
+  # ── Service 1 : Base de données PostgreSQL ──────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: histoclass-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: histoclass_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Service 2 : Stockage d'objets MinIO ─────────────────────────────
+  minio:
+    image: minio/minio
+    container_name: histoclass-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Service 3 : Initialisation MinIO (éphémère) ────────────────────
+  minio-init:
+    image: minio/mc
+    container_name: histoclass-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 admin password123 &&
+      mc mb --ignore-existing local/histoclass-images &&
+      mc anonymous set public local/histoclass-images &&
+      echo '✅ Bucket histoclass-images créé et configuré en public.' &&
+      exit 0
+      "
+
+  # ── Service 4 : Backend .NET API ────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: HistoClassAI.Api/Dockerfile
+    container_name: histoclass-api
+    restart: unless-stopped
+    ports:
+      - "5008:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=histoclass_db;User Id=postgres;Password=postgres;
+      - Minio__Endpoint=minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  # ── Service 5 : Microservice IA (FastAPI / PyTorch) ─────────────────
+  ia-service:
+    build:
+      context: ./HistoClassAI.IaService
+      dockerfile: Dockerfile
+    container_name: histoclass-ia
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+  # ── Service 6 : Frontend Web Vue.js (Dashboard Admin) ───────────────
+  web:
+    build:
+      context: ./HistoClassAI.Web
+      dockerfile: Dockerfile
+    container_name: histoclass-web
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  minio_data:
