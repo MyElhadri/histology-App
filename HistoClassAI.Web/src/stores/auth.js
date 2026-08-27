@@ -15,19 +15,20 @@ export const useAuthStore = defineStore('auth', {
     async login(email, password) {
       try {
         const response = await api.post('/auth/login', { 
-          email: email, 
-          motDePasse: password // Le backend C# attend "MotDePasse"
+          email: email.trim(), 
+          motDePasse: password.trim()
         })
         
         this.token = response.data.token
         localStorage.setItem('token', this.token)
-        
-        // On pourrait aussi décoder le JWT pour lire le rôle exact,
-        // mais on va s'appuyer sur la sécurité du backend .NET pour l'instant.
-        return true
+        return null // Return null when success
       } catch (error) {
         console.error('Erreur de connexion:', error.response?.data || error.message)
-        return false
+        // Return exact message from backend if available
+        if (error.response && error.response.data && typeof error.response.data === 'string') {
+          return error.response.data
+        }
+        return 'Erreur réseau ou identifiants incorrects.'
       }
     },
     

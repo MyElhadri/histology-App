@@ -15,12 +15,12 @@ const handleLogin = async () => {
   isLoading.value = true
   errorMessage.value = ''
 
-  const success = await authStore.login(email.value, password.value)
+  const apiError = await authStore.login(email.value, password.value)
 
-  if (success) {
+  if (apiError === null) {
     router.push('/dashboard')
   } else {
-    errorMessage.value = 'Identifiants incorrects. Vérifiez votre email et votre mot de passe.'
+    errorMessage.value = apiError
   }
 
   isLoading.value = false
