@@ -27,7 +27,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<String?> login(String email, String password) async {
     try {
       final token = await ApiService.login(email, password);
       if (token != null) {
@@ -36,12 +36,13 @@ class AuthProvider with ChangeNotifier {
         await prefs.setString('jwt_token', token);
         _decodeToken();
         notifyListeners();
-        return true;
+        return null;
       }
     } catch (e) {
       print('Erreur login: $e');
+      return e.toString().replaceFirst('Exception: ', '');
     }
-    return false;
+    return "Erreur de connexion";
   }
 
   void _decodeToken() {

@@ -17,8 +17,9 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['token'];
+    } else {
+      throw Exception(response.body);
     }
-    throw Exception('Failed to login');
   }
 
   /// Envoie une image au backend pour analyse IA.

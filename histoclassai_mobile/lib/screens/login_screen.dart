@@ -19,21 +19,21 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleLogin() async {
     setState(() => _isLoading = true);
     final auth = Provider.of<AuthProvider>(context, listen: false);
-    final success = await auth.login(
+    final errorMessage = await auth.login(
       _emailController.text.trim(),
-      _passwordController.text,
+      _passwordController.text.trim(),
     );
     
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (success) {
+    if (errorMessage == null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Identifiants incorrects')),
+        SnackBar(content: Text(errorMessage)),
       );
     }
   }
