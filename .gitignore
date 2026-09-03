@@ -52,3 +52,17 @@ build/
 
 # Docker
 .dockerignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs and DB Backups
+*.log
+*.txt
+*.sql
+*.csv
+
+# Scratch Scripts
+safe_seed.ps1
