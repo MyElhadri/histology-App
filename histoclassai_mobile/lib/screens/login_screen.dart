@@ -58,35 +58,57 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Logo or Icon
+                // Institutional Logos Header
                 Container(
-                  width: 80,
-                  height: 80,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withOpacity(0.1),
-                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.shade200),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                  child: Icon(
-                    Icons.biotech_rounded,
-                    size: 40,
-                    color: theme.colorScheme.primary,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/images/logo_faculte_medecine.png',
+                        height: 48,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: 8),
+                      Container(height: 1, color: Colors.grey.shade200),
+                      const SizedBox(height: 8),
+                      Image.asset(
+                        'assets/images/logo_labo_histologie.png',
+                        height: 44,
+                        fit: BoxFit.contain,
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 24),
                 
                 // Welcome Text
                 Text(
-                  'Bon retour !',
+                  'HistoClass AI',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.displayMedium,
+                  style: theme.textTheme.displayMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Text(
-                  'Connectez-vous pour continuer',
+                  'Portail Étudiant • Faculté de Médecine',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium,
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
 
                 // Form Card
                 Card(
@@ -104,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
-                            hintText: 'prenom.nom@etudiant.ensat.ma',
+                            hintText: 'nom.prenom@etu.uae.ac.ma',
                             prefixIcon: Icon(Icons.email_outlined),
                           ),
                         ),

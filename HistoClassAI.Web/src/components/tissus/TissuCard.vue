@@ -30,7 +30,7 @@ const themeData = computed(() => {
         </div>
         <div>
           <h3 class="card-title">{{ tissu.nom }}</h3>
-          <p class="card-subtitle">Épithélium de revêtement</p>
+          <p class="card-subtitle">{{ tissu.organes && tissu.organes.length > 0 ? tissu.organes.map(o => o.nom).join(', ') : 'Aucun organe associé' }}</p>
         </div>
       </div>
     </div>
@@ -40,6 +40,14 @@ const themeData = computed(() => {
       <span class="ia-badge">
         <span class="pulse-dot"></span>
         Code IA: <span class="ia-code">{{ tissu.codeLabelIa }}</span>
+      </span>
+    </div>
+
+    <!-- Organes Tags -->
+    <div v-if="tissu.organes && tissu.organes.length > 0" class="organes-chips">
+      <span v-for="org in tissu.organes" :key="org.id" class="organe-chip">
+        <span class="material-symbols-outlined" style="font-size: 13px;">biotech</span>
+        {{ org.nom }}
       </span>
     </div>
 
@@ -210,6 +218,30 @@ const themeData = computed(() => {
   font-family: monospace;
   font-weight: 600;
   color: var(--md-primary);
+}
+
+/* Organes Chips */
+.organes-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.organe-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--md-surface-container-low, #f1f5f9);
+  color: #4F46E5;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--md-surface-variant);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Metrics Grid */

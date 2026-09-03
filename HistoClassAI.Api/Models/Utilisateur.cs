@@ -11,6 +11,8 @@ public class Utilisateur
     public string MotDePasseHash { get; set; } = string.Empty;
     public RoleUtilisateur Role { get; set; }
     public bool EstActif { get; set; } = true;
+    public string? GroupeTp { get; set; }
+    public string? Apogee { get; set; }
     public DateTime DateCreation { get; set; } = DateTime.UtcNow;
 
     // Navigation

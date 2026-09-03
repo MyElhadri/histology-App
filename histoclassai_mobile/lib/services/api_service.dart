@@ -38,7 +38,7 @@ class ApiService {
       final data = jsonDecode(response.body);
       return PredictionResult.fromJson(data);
     } else {
-      throw Exception('Failed to upload scan: ${response.statusCode} - ${response.body}');
+      throw Exception('Impossible d\'analyser la lame histologique (${response.statusCode})');
     }
   }
 
@@ -57,7 +57,7 @@ class ApiService {
       Iterable l = jsonDecode(response.body);
       return List<Question>.from(l.map((model) => Question.fromJson(model)));
     } else {
-      throw Exception('Failed to fetch quiz');
+      throw Exception('Impossible de charger le questionnaire QCM');
     }
   }
 
@@ -76,7 +76,7 @@ class ApiService {
       Iterable l = jsonDecode(response.body);
       return List<ScanHistoryItem>.from(l.map((model) => ScanHistoryItem.fromJson(model)));
     } else {
-      throw Exception('Failed to fetch scan history');
+      throw Exception('Impossible de charger l\'historique des analyses');
     }
   }
 
@@ -96,7 +96,7 @@ class ApiService {
     );
 
     if (response.statusCode != 201 && response.statusCode != 200) {
-      throw Exception('Failed to submit result: ${response.statusCode} - ${response.body}');
+      throw Exception('Impossible d\'enregistrer le score du QCM');
     }
   }
 }

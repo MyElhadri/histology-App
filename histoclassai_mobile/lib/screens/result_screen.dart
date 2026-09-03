@@ -240,18 +240,19 @@ class ResultScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.errorContainer,
+                    color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, color: theme.colorScheme.error),
+                      Icon(Icons.info_outline, color: theme.colorScheme.primary),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Aucun QCM disponible pour ce tissu.',
+                          'Aucun QCM d\'évaluation n\'est actuellement disponible pour ce tissu.',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.error,
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),

@@ -39,7 +39,6 @@ class AuthProvider with ChangeNotifier {
         return null;
       }
     } catch (e) {
-      print('Erreur login: $e');
       return e.toString().replaceFirst('Exception: ', '');
     }
     return "Erreur de connexion";

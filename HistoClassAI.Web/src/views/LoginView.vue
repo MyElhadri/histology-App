@@ -42,17 +42,32 @@ const handleLogin = async () => {
     <!-- Right Column - Login -->
     <div class="login-panel">
       <main class="login-main">
-        <!-- Logo Header -->
+        <!-- Logo Header with Institutional Logos -->
         <div class="login-header">
-          <span class="material-symbols-outlined logo-icon" style="font-variation-settings: 'FILL' 1;">smb_share</span>
-          <h1 class="logo-title">HistoClassAI</h1>
+          <div class="institutional-banner">
+            <img
+              src="/logos/logo_faculte_medecine.png"
+              alt="Faculté de Médecine et de Pharmacie de Tanger"
+              class="login-inst-logo"
+            />
+            <div class="banner-divider"></div>
+            <img
+              src="/logos/logo_labo_histologie.png"
+              alt="Laboratoire d'Histologie de Tanger"
+              class="login-inst-logo"
+            />
+          </div>
+          <div class="app-branding">
+            <span class="material-symbols-outlined logo-icon" style="font-variation-settings: 'FILL' 1;">biotech</span>
+            <h1 class="logo-title">HistoClass AI</h1>
+          </div>
         </div>
 
         <!-- Login Card -->
         <div class="login-card">
           <div class="card-header">
-            <h2>Connexion</h2>
-            <p>Accédez à votre espace de gestion histologique</p>
+            <h2>Portail Enseignant</h2>
+            <p>Faculté de Médecine et de Pharmacie • Laboratoire d'Histologie</p>
           </div>
 
           <form @submit.prevent="handleLogin" class="login-form">
@@ -175,23 +190,55 @@ const handleLogin = async () => {
 /* ── Header ──────────────────────────────── */
 .login-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: var(--stack-lg);
 }
 
+.institutional-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #ffffff;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  width: 100%;
+}
+
+.login-inst-logo {
+  max-height: 44px;
+  width: auto;
+  max-width: 46%;
+  object-fit: contain;
+}
+
+.banner-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.app-branding {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .logo-icon {
-  font-size: 32px;
-  color: var(--md-primary-container);
+  font-size: 28px;
+  color: var(--md-primary);
 }
 
 .logo-title {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 32px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 30px;
   letter-spacing: -0.01em;
-  color: var(--md-primary-container);
+  color: var(--md-primary);
 }
 
 /* ── Card ────────────────────────────────── */

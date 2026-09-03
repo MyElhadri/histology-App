@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import { getTissus, createTissu, updateTissu, deleteTissu } from '../services/api'
+import { getTissus, createTissu, updateTissu, deleteTissu, getOrganes } from '../services/api'
 import Sidebar from '../components/layout/Sidebar.vue'
 import TissuCard from '../components/tissus/TissuCard.vue'
 import AddTissuModal from '../components/tissus/AddTissuModal.vue'
@@ -11,21 +11,31 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const tissus = ref([])
+const organes = ref([])
 const isLoading = ref(false)
 const isSubmitting = ref(false)
 const showPanel = ref(false)
 const searchQuery = ref('')
+const selectedOrganeFilter = ref(null)
 const notification = ref({ type: '', message: '' })
 
 // Add state for editing
 const editingTissu = ref(null)
 
 const filteredTissus = computed(() => {
-  if (!searchQuery.value) return tissus.value
-  const q = searchQuery.value.toLowerCase()
-  return tissus.value.filter(t =>
-    t.nom.toLowerCase().includes(q) || t.codeLabelIa.toLowerCase().includes(q)
-  )
+  let list = tissus.value
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(t =>
+      t.nom.toLowerCase().includes(q) || t.codeLabelIa.toLowerCase().includes(q)
+    )
+  }
+  if (selectedOrganeFilter.value) {
+    list = list.filter(t =>
+      t.organes && t.organes.some(o => o.id === selectedOrganeFilter.value)
+    )
+  }
+  return list
 })
 
 const fetchTissus = async () => {
@@ -38,9 +48,18 @@ const fetchTissus = async () => {
       authStore.logout()
       router.push('/')
     }
-    showNotification('error', "Impossible de charger les données.")
+    showNotification('error', "Impossible de charger les tissus.")
   } finally {
     isLoading.value = false
+  }
+}
+
+const fetchOrganes = async () => {
+  try {
+    const response = await getOrganes()
+    organes.value = response.data
+  } catch (error) {
+    console.error("Erreur chargement organes", error)
   }
 }
 
@@ -90,7 +109,10 @@ const showNotification = (type, message) => {
   setTimeout(() => { notification.value = { type: '', message: '' } }, 4000)
 }
 
-onMounted(() => { fetchTissus() })
+onMounted(() => {
+  fetchTissus()
+  fetchOrganes()
+})
 </script>
 
 <template>
@@ -102,8 +124,6 @@ onMounted(() => { fetchTissus() })
       <header class="topbar">
         <div></div>
         <div class="topbar-actions">
-          <button class="topbar-btn"><span class="material-symbols-outlined">notifications</span></button>
-          <button class="topbar-btn"><span class="material-symbols-outlined">settings</span></button>
           <div class="avatar">P</div>
         </div>
       </header>
@@ -126,7 +146,7 @@ onMounted(() => { fetchTissus() })
               <span class="material-symbols-outlined header-icon">account_tree</span>
               Gestion des Tissus
             </h2>
-            <p class="page-subtitle">Gérez la taxonomie histologique et les données d'entraînement utilisées par le modèle de classification par intelligence artificielle.</p>
+            <p class="page-subtitle">Consultez et gérez la taxonomie histologique et les liaisons avec les organes correspondants.</p>
           </div>
           <button class="btn-add" @click="openAddPanel">
             <span class="material-symbols-outlined" style="font-size:20px">add</span>
@@ -147,11 +167,9 @@ onMounted(() => { fetchTissus() })
           </div>
           <div class="filter-divider"></div>
           <div class="select-field">
-            <select class="filter-select">
-              <option>Tous les organes</option>
-              <option>Cœur (Cardiovasculaire)</option>
-              <option>Peau (Tégumentaire)</option>
-              <option>Foie (Digestif)</option>
+            <select class="filter-select" v-model="selectedOrganeFilter">
+              <option :value="null">Tous les organes</option>
+              <option v-for="org in organes" :key="org.id" :value="org.id">{{ org.nom }}</option>
             </select>
             <span class="material-symbols-outlined select-icon">filter_list</span>
           </div>
@@ -160,14 +178,14 @@ onMounted(() => { fetchTissus() })
         <!-- Loading -->
         <div v-if="isLoading" class="empty-state">
           <div class="spinner"></div>
-          <p>Chargement des données...</p>
+          <p>Chargement des tissus...</p>
         </div>
 
         <!-- Empty -->
         <div v-else-if="filteredTissus.length === 0" class="empty-state">
-          <span class="material-symbols-outlined empty-icon">smb_share</span>
+          <span class="material-symbols-outlined empty-icon">category</span>
           <h3>Aucun tissu trouvé</h3>
-          <p>Ajoutez un type de tissu que votre modèle IA sait classifier.</p>
+          <p>Aucun type de tissu ne correspond aux critères de recherche.</p>
           <button class="btn-add btn-add--outline" @click="openAddPanel">
             <span class="material-symbols-outlined" style="font-size:20px">add</span>
             Ajouter un tissu
@@ -192,6 +210,7 @@ onMounted(() => { fetchTissus() })
       :visible="showPanel"
       :is-submitting="isSubmitting"
       :initial-data="editingTissu"
+      :organes="organes"
       @close="showPanel = false"
       @submit="handleAddTissu"
     />

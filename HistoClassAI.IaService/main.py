@@ -27,15 +27,15 @@ model = None
 
 # ── Mapping des classes (9 classes du modèle) ─────────────────────────
 CLASS_NAMES = [
-    "classe_00",
-    "classe_01",
-    "classe_02",
-    "classe_03",
-    "classe_04",
-    "classe_05",
-    "classe_06",
-    "classe_07",
-    "classe_08",
+    "ADI",
+    "BACK",
+    "DEB",
+    "LYM",
+    "MUC",
+    "MUS",
+    "NORM",
+    "STR",
+    "TUM"
 ]
 
 # ── Lifespan : chargement du modèle au démarrage ─────────────────────

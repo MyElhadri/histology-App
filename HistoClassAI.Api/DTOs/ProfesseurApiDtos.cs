@@ -43,6 +43,8 @@ public class EtudiantResponseDto
     public string Prenom { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public bool EstActif { get; set; } = true;
+    public string? GroupeTp { get; set; }
+    public string? Apogee { get; set; }
     public string? MotDePasseGenere { get; set; }
     public bool EmailEnvoye { get; set; }
     public DateTime DateCreation { get; set; }
@@ -53,6 +55,8 @@ public class AddEtudiantDto
     public string Nom { get; set; } = string.Empty;
     public string Prenom { get; set; } = string.Empty;
     public string? Email { get; set; }
+    public string? GroupeTp { get; set; }
+    public string? Apogee { get; set; }
 }
 
 public class UpdateEtudiantDto
@@ -61,6 +65,18 @@ public class UpdateEtudiantDto
     public string Prenom { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public bool EstActif { get; set; } = true;
+    public string? GroupeTp { get; set; }
+    public string? Apogee { get; set; }
+}
+
+public class ImportResultDto
+{
+    public int TotalLignesTraitees { get; set; }
+    public int Ajoutes { get; set; }
+    public int Doublons { get; set; }
+    public int Erreurs { get; set; }
+    public int EmailsEnvoyes { get; set; }
+    public List<string> Details { get; set; } = new();
 }
 
 public class ResetPasswordDto

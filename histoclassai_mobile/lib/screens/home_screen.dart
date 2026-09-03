@@ -18,34 +18,84 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Institutional Top Banner
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 14, 20, 4),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.grey.shade200),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Image.asset(
+                      'assets/images/logo_faculte_medecine.png',
+                      height: 32,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  Container(
+                    height: 24,
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    color: Colors.grey.shade300,
+                  ),
+                  Expanded(
+                    child: Image.asset(
+                      'assets/images/logo_labo_histologie.png',
+                      height: 32,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Bonjour, Étudiant',
-                        style: theme.textTheme.displayMedium?.copyWith(fontSize: 26),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Prêt pour votre prochaine analyse ?',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Bonjour, Étudiant',
+                          style: theme.textTheme.displayMedium?.copyWith(fontSize: 24),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Prêt pour votre prochaine analyse ?',
+                          style: theme.textTheme.bodyMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.notifications_outlined),
                         onPressed: () {},
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4),
                       InkWell(
                         onTap: () async {
                           await auth.logout();
